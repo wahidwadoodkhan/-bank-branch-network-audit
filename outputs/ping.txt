@@ -1,0 +1,14 @@
+
+TASK 1 - NETWORK CONNECTIVITY TEST
+Project: Bank Branch Network Audit
+Tool: Cisco Packet Tracer
+
+Test: PC0 to PC1
+
+Source Device: PC0
+Destination IP: 192.168.1.11
+
+ping 192.168.1.11
+
+Result: Successful
+Packet Loss: 0%
