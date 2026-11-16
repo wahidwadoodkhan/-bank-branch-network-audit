@@ -71,8 +71,6 @@ Detailed command outputs are provided in:
 
 ## 7. Problem Encountered and Troubleshooting
 
-## 7. Problem Encountered and Troubleshooting
-
 I did not encounter any major problems while setting up this network. Both PCs were connected successfully to the Cisco 2960-24TT switch, and the IP addresses were configured correctly.
 
 I verified the network connectivity using the ping command. Both PCs successfully communicated with each other, showing that the network was working as expected.
