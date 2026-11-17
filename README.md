@@ -68,12 +68,37 @@ Detailed command outputs are provided in:
 
 - `outputs/ipconfig.txt`
 - `outputs/ping.txt`
-
+- 
 ## 7. Problem Encountered and Troubleshooting
 
-I did not encounter any major problems while setting up this network. Both PCs were connected successfully to the Cisco 2960-24TT switch, and the IP addresses were configured correctly.
+## Problem:
+During testing, a ping from PC0 to PC1 (192.168.1.11) failed with the message
+"Request timed out" and 100% packet loss. This meant PC0 could not reach PC1
+through the switch.
 
-I verified the network connectivity using the ping command. Both PCs successfully communicated with each other, showing that the network was working as expected.
+## Troubleshooting steps:
+1. Checked the topology and found that the link between PC1 and the switch was
+   not active (no green link light).
+2. Checked the IP configuration on both PCs with `ipconfig` and confirmed that
+   both used the same subnet (192.168.1.0/24, mask 255.255.255.0), so the
+   addressing was not the cause.
+3. Found that the PC1 port was turned off, so no traffic could pass through the
+   switch.
+
+## Solution:
+Turned the PC1 FastEthernet0 port back on (and confirmed the cable was
+connected to the switch). After the link light turned green, the ping was
+repeated.
+
+## Result:
+PC0 successfully pinged PC1 with 4 packets sent, 4 received, and 0% loss.
+The same test from PC1 to PC0 also succeeded.
+
+## Lesson learned:
+"Request timed out" usually points to a physical or connectivity problem (port
+down, cable, wrong IP or subnet). Checking the link lights first, then the IP
+settings, is a quick way to find the cause. The failed ping is shown in
+`outputs/ping_timeout.png` and the successful ping in `outputs/ping.txt`
 
 
 ## 8. Project Tools
