@@ -153,3 +153,20 @@ Describe one real issue you faced here, or delete this section if there was none
 - **Task 3:** list the risks of this flat design and what each costs the business.
 - **Task 4:** redesign with VLANs and a VLSM addressing plan.
 - **Task 5:** before and after comparison, test table and final handover.
+## 9. Risks of the Flat Design (Task 3)
+
+Each risk was tested in the lab on the as-is network. No fixes were applied in this task; the redesign is Task 4.
+
+| ID | Risk | What was found (evidence) | What it costs the bank | Likelihood | Impact | Rating |
+|----|------|---------------------------|------------------------|-----------|--------|--------|
+| R1 | No separation between guests and the banking server | Visitor laptop (192.168.1.40) pinged the banking server (.20) and a teller PC with 0% loss. `outputs/risk1-guest-to-server-ping.txt` | A visitor or infected device can reach customer account data. This risks a data breach, regulator penalties, legal cost and loss of customer trust. | 3 | 3 | 9 High |
+| R2 | One broadcast domain and one VLAN | All ports are in VLAN 1 and all seven devices appear in the MAC table on Fa0/1 to Fa0/7. `outputs/risk2-vlan-and-mac-table.txt` | Faults and broadcast traffic reach every device, so slowdowns hit tellers during busy periods and get worse as the branch grows. | 2 | 2 | 4 Medium |
+| R3 | Switch administration is unprotected | `enable` worked with no password; the config has no enable secret, line passwords or banner. `outputs/risk3-no-admin-password.txt` | Anyone with physical access can change or erase the configuration and take the branch offline. Recovery costs staff time and an outage. | 2 | 3 | 6 High |
+| R4 | Unused ports are open, no port security | A new PC on Fa0/8 got network access at once and reached the banking server. `outputs/risk4-rogue-ping.txt` | A visitor, staff member or attacker can plug in and get inside the network, which risks fraud and stolen data with no way to trace who did it. | 3 | 3 | 9 High |
+| R5 | One switch is a single point of failure | With the switch powered off, every ping timed out (100% loss). `outputs/risk5-switch-failure-ping.txt` | Tellers cannot process deposits or withdrawals, so the branch loses transactions and customers while staff are paid but idle. | 2 | 3 | 6 High |
+| R6 | Manual addressing and no documentation | All hosts use static addresses and no DHCP (see the `ipconfig` files). No record existed before this audit. | Duplicate addresses and unknown devices are hard to find, so every fault takes longer to fix and changes risk breaking other devices. | 2 | 2 | 4 Medium |
+
+Rating = Likelihood x Impact (1 to 3 each). 1 to 3 is Low, 4 to 5 is Medium, 6 to 9 is High.
+R6 was assessed from the configuration and not tested separately.
+
+Risk points on the network: R1 (Laptop0 and Server0 share one network), R3 and R5 (BRANCH-SW1), R4 (open ports Fa0/8 to Fa0/24).
