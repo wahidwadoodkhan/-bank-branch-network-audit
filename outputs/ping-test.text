@@ -1,0 +1,102 @@
+C:\>ping 192.168.1.11
+
+Pinging 192.168.1.11 with 32 bytes of data:
+
+Reply from 192.168.1.11: bytes=32 time<1ms TTL=128
+Reply from 192.168.1.11: bytes=32 time<1ms TTL=128
+Reply from 192.168.1.11: bytes=32 time<1ms TTL=128
+Reply from 192.168.1.11: bytes=32 time=1ms TTL=128
+
+Ping statistics for 192.168.1.11:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+Approximate round trip times in milli-seconds:
+    Minimum = 0ms, Maximum = 1ms, Average = 0ms
+
+C:\>1912.168.1.12
+Invalid Command.
+
+C:\>ping 192.168.1.12
+
+Pinging 192.168.1.12 with 32 bytes of data:
+
+Reply from 192.168.1.12: bytes=32 time<1ms TTL=128
+Reply from 192.168.1.12: bytes=32 time<1ms TTL=128
+Reply from 192.168.1.12: bytes=32 time<1ms TTL=128
+Reply from 192.168.1.12: bytes=32 time<1ms TTL=128
+
+Ping statistics for 192.168.1.12:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+Approximate round trip times in milli-seconds:
+    Minimum = 0ms, Maximum = 0ms, Average = 0ms
+
+C:\>ping 192.168.1.13
+
+Pinging 192.168.1.13 with 32 bytes of data:
+
+Reply from 192.168.1.13: bytes=32 time<1ms TTL=128
+Reply from 192.168.1.13: bytes=32 time<1ms TTL=128
+Reply from 192.168.1.13: bytes=32 time<1ms TTL=128
+Reply from 192.168.1.13: bytes=32 time<1ms TTL=128
+
+Ping statistics for 192.168.1.13:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+Approximate round trip times in milli-seconds:
+    Minimum = 0ms, Maximum = 0ms, Average = 0ms
+
+C:\>ping 192.168.1.13
+
+Pinging 192.168.1.13 with 32 bytes of data:
+
+Reply from 192.168.1.13: bytes=32 time<1ms TTL=128
+Reply from 192.168.1.13: bytes=32 time<1ms TTL=128
+Reply from 192.168.1.13: bytes=32 time<1ms TTL=128
+Reply from 192.168.1.13: bytes=32 time=1ms TTL=128
+
+Ping statistics for 192.168.1.13:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+Approximate round trip times in milli-seconds:
+    Minimum = 0ms, Maximum = 1ms, Average = 0ms
+
+C:\>ping 192.168.1.20
+
+Pinging 192.168.1.20 with 32 bytes of data:
+
+Reply from 192.168.1.20: bytes=32 time<1ms TTL=128
+Reply from 192.168.1.20: bytes=32 time<1ms TTL=128
+Reply from 192.168.1.20: bytes=32 time<1ms TTL=128
+Reply from 192.168.1.20: bytes=32 time<1ms TTL=128
+
+Ping statistics for 192.168.1.20:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+Approximate round trip times in milli-seconds:
+    Minimum = 0ms, Maximum = 0ms, Average = 0ms
+
+C:\>ping 192.168.1.30
+
+Pinging 192.168.1.30 with 32 bytes of data:
+
+Reply from 192.168.1.30: bytes=32 time=1ms TTL=128
+Reply from 192.168.1.30: bytes=32 time<1ms TTL=128
+Reply from 192.168.1.30: bytes=32 time<1ms TTL=128
+Reply from 192.168.1.30: bytes=32 time<1ms TTL=128
+
+Ping statistics for 192.168.1.30:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+Approximate round trip times in milli-seconds:
+    Minimum = 0ms, Maximum = 1ms, Average = 0ms
+
+C:\>ping 192.168.1.340
+Ping request could not find host 192.168.1.340. Please check the name and try again.
+C:\>ping 192.168.1.40
+
+Pinging 192.168.1.40 with 32 bytes of data:
+
+Reply from 192.168.1.40: bytes=32 time<1ms TTL=128
+Reply from 192.168.1.40: bytes=32 time<1ms TTL=128
+Reply from 192.168.1.40: bytes=32 time<1ms TTL=128
+Reply from 192.168.1.40: bytes=32 time<1ms TTL=128
+
+Ping statistics for 192.168.1.40:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+Approximate round trip times in milli-seconds:
+    Minimum = 0ms, Maximum = 0ms, Average = 0ms
