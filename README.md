@@ -1,118 +1,155 @@
-
 # Bank Branch Network Audit
+
+Audit and redesign of a flat office network for a small bank branch.
+
+**Intern:** Wahid Wadood Khan
+**Tool:** Cisco Packet Tracer
+**Current stage:** Task 2 of 5: as-is write-up of the flat network
+
+---
 
 ## 1. Project Overview
 
-This project demonstrates the setup of a basic computer network for a small bank branch using Cisco Packet Tracer.
+A small bank branch has a single flat office network with no documentation. This project audits that network and later redesigns it in five tasks:
 
-The network consists of:
-- Two computers (PC0 and PC1)
-- One Cisco 2960-24TT switch
-- Ethernet connections between both PCs and the switch
+| Task | Description | Status |
+|------|-------------|--------|
+| 1 | First network: two PCs and a switch | Done |
+| 2 | As-is write-up: one flat /24, one switch, drawn and described | **This README** |
+| 3 | Risks of the flat design and what each costs the business | Planned |
+| 4 | New design: VLANs and VLSM addressing plan | Planned |
+| 5 | Handover: before and after, test table, final README | Planned |
 
-The purpose is to establish communication between the two computers using IP addressing and verify connectivity using the ping command.
+This stage records the network exactly as it is. Nothing has been hardened or changed to improve it yet.
 
-## 2. Network Topology
+## 2. Network Summary
 
-The following diagram shows the network connection:
+- One Cisco 2960-24TT switch (`BRANCH-SW1`)
+- Seven end devices: three tellers, one manager, one banking server, one printer, one visitor laptop
+- One flat network: `192.168.1.0/24`, with no VLANs and no router
+- All devices connected to the switch by copper straight-through Ethernet cables
+- All IP addresses set manually (static)
+
+## 3. As-Is Topology
 
 ```text
-       PC0                         PC1
-  192.168.1.10                192.168.1.11
-       |                           |
-       |                           |
-       +------------+--------------+
-                    |
-             Cisco 2960 Switch
-                    |
-              Local Network
+  Teller1   Teller2   Teller3   Manager   Banking    Printer    Visitor
+   PC0       PC1       PC2       PC3      Server0    Printer0   Laptop0
+   .10       .11       .12       .13       .20        .30        .40
+    |         |         |         |         |          |          |
+  Fa0/1     Fa0/2     Fa0/3     Fa0/4     Fa0/5      Fa0/6      Fa0/7
+    +---------+---------+----+----+---------+----------+----------+
+                              |
+                  BRANCH-SW1 (Cisco 2960-24TT)
+                    VLAN 1, 192.168.1.2/24
 ```
 
-Both PCs are connected to the same switch using Ethernet cables.
+Screenshot from Packet Tracer:
 
-## 3. IP Addressing Table
+![Network topology](diagrams/topology.png)
 
-| Device | Interface | IP Address | Subnet Mask |
-|--------|-----------|------------|-------------|
-| PC0 | FastEthernet0 | 192.168.1.10 | 255.255.255.0 |
-| PC1 | FastEthernet0 | 192.168.1.11 | 255.255.255.0 |
+## 4. Addressing Table
 
-Network Address: 192.168.1.0/24
+Network: `192.168.1.0/24` (254 usable host addresses)
 
-## 4. Role of the Switch
+| Device | Role | Interface | Switch Port | IP Address | Subnet Mask |
+|--------|------|-----------|-------------|------------|-------------|
+| BRANCH-SW1 | Switch (management) | VLAN 1 | n/a | 192.168.1.2 | 255.255.255.0 |
+| PC0 | Teller 1 | FastEthernet0 | Fa0/1 | 192.168.1.10 | 255.255.255.0 |
+| PC1 | Teller 2 | FastEthernet0 | Fa0/2 | 192.168.1.11 | 255.255.255.0 |
+| PC2 | Teller 3 | FastEthernet0 | Fa0/3 | 192.168.1.12 | 255.255.255.0 |
+| PC3 | Branch manager | FastEthernet0 | Fa0/4 | 192.168.1.13 | 255.255.255.0 |
+| Server0 | Core banking server | FastEthernet0 | Fa0/5 | 192.168.1.20 | 255.255.255.0 |
+| Printer0 | Shared printer | FastEthernet0 | Fa0/6 | 192.168.1.30 | 255.255.255.0 |
+| Laptop0 | Visitor laptop | FastEthernet0 | Fa0/7 | 192.168.1.40 | 255.255.255.0 |
 
-The Cisco 2960 switch connects both computers within the same local area network (LAN).
+No default gateway is configured because the network has no router.
 
-It forwards Ethernet frames to the correct device using MAC addresses. This allows PC0 and PC1 to communicate with each other through the switch.
+## 5. Findings: What Was Found
 
-## 5. Why Do Both PCs Need the Same Subnet Mask?
+Because there was no documentation, the network was discovered and recorded using `show` commands and `ipconfig /all`.
 
-Both computers use the subnet mask 255.255.255.0 because they belong to the same /24 network.
+1. **One network for everything.** All devices share `192.168.1.0/24` and one broadcast domain.
+2. **No segmentation.** Every port is in the default VLAN 1. Tellers, manager, server, printer and a visitor laptop are all on the same network.
+3. **One switch.** All devices depend on a single switch, with no redundancy.
+4. **Basic switch configuration only.** The switch has a hostname and a management IP on VLAN 1. It has no passwords, banner or port security.
+5. **Static addressing.** IP addresses are assigned by hand, so there is no DHCP and no central record of who has which address.
+6. **No documentation.** No diagram or address list existed before this audit. This README is the first record.
 
-This subnet mask identifies which part of an IP address represents the network and which part represents the host.
+The business risks of these findings are assessed in Task 3.
 
-Both computers can communicate directly within the same local network without requiring a router.
+## 6. Switch Configuration (As Found)
 
-## 6. Connectivity Testing
+```text
+hostname BRANCH-SW1
+!
+interface Vlan1
+ ip address 192.168.1.2 255.255.255.0
+ no shutdown
+```
 
-Connectivity was tested using the ping command in Cisco Packet Tracer.
+The full output is in `configs/BRANCH-SW1-running-config.txt`.
 
-- PC0 pinged PC1 (192.168.1.11).
-- PC1 pinged PC0 (192.168.1.10).
+## 7. Verification
 
-Both computers successfully exchanged ping packets.
+PC0 was used to test connectivity to every other device. Results:
 
-The results showed 0% packet loss.
+| Test | Destination | Result |
+|------|-------------|--------|
+| Ping | PC1 (192.168.1.11) | 4 sent, 4 received, 0% loss |
+| Ping | PC2 (192.168.1.12) | 4 sent, 4 received, 0% loss |
+| Ping | PC3 (192.168.1.13) | 4 sent, 4 received, 0% loss |
+| Ping | Server0 (192.168.1.20) | 4 sent, 4 received, 0% loss |
+| Ping | Printer0 (192.168.1.30) | 4 sent, 4 received, 0% loss |
+| Ping | Laptop0 (192.168.1.40) | 4 sent, 4 received, 0% loss |
+| Ping | BRANCH-SW1 (192.168.1.2) | 4 sent, 4 received, 0% loss |
+| Traceroute | Server0 (192.168.1.20) | 1 hop (same network) |
 
-Detailed command outputs are provided in:
+The single-hop traceroute confirms all devices are on one flat network with no router in between. Edit the table if any of your results differ.
 
-- `outputs/ipconfig.txt`
-- `outputs/ping.txt`
-- 
-## 7. Problem Encountered and Troubleshooting
+## 8. Evidence Files
 
-## Problem:
-During testing, a ping from PC0 to PC1 (192.168.1.11) failed with the message
-"Request timed out" and 100% packet loss. This meant PC0 could not reach PC1
-through the switch.
+| Evidence | File |
+|----------|------|
+| Switch running-config | `configs/BRANCH-SW1-running-config.txt` |
+| PC0 IP settings | `configs/PC0-ipconfig.txt` |
+| PC1 IP settings | `configs/PC1-ipconfig.txt` |
+| PC2 IP settings | `configs/PC2-ipconfig.txt` |
+| PC3 IP settings | `configs/PC3-ipconfig.txt` |
+| Server0 IP settings | `configs/Server0-ipconfig.txt` |
+| Laptop0 IP settings | `configs/Laptop0-ipconfig.txt` |
+| Interface summary | `outputs/show-ip-interface-brief.txt` |
+| VLAN table | `outputs/show-vlan-brief.txt` |
+| MAC address table | `outputs/show-mac-address-table.txt` |
+| Port status | `outputs/show-interfaces-status.txt` |
+| Ping tests | `outputs/ping-tests.txt` |
+| Traceroute | `outputs/traceroute.txt` |
+| Topology image | `diagrams/topology.png` |
 
-## Troubleshooting steps:
-1. Checked the topology and found that the link between PC1 and the switch was
-   not active (no green link light).
-2. Checked the IP configuration on both PCs with `ipconfig` and confirmed that
-   both used the same subnet (192.168.1.0/24, mask 255.255.255.0), so the
-   addressing was not the cause.
-3. Found that the PC1 port was turned off, so no traffic could pass through the
-   switch.
+## 9. Repository Structure
 
-## Solution:
-Turned the PC1 FastEthernet0 port back on (and confirmed the cable was
-connected to the switch). After the link light turned green, the ping was
-repeated.
+```text
+bank-branch-network-audit/
+├── README.md
+├── configs/
+├── outputs/
+└── diagrams/
+```
 
-## Result:
-PC0 successfully pinged PC1 with 4 packets sent, 4 received, and 0% loss.
-The same test from PC1 to PC0 also succeeded.
+## 10. How to Reproduce
 
-## Lesson learned:
-"Request timed out" usually points to a physical or connectivity problem (port
-down, cable, wrong IP or subnet). Checking the link lights first, then the IP
-settings, is a quick way to find the cause. The failed ping is shown in
-`outputs/ping_timeout.png` and the successful ping in `outputs/ping.txt`
+1. Open Cisco Packet Tracer and add one 2960-24TT switch and seven end devices.
+2. Connect each device to the switch with a copper straight-through cable (ports as in the addressing table).
+3. Set the static IP addresses and the `255.255.255.0` mask on each device. Leave the gateway empty.
+4. On the switch, set the hostname and the VLAN 1 management address.
+5. Run the `show` commands and ping tests, then save the output as text files.
 
+## 11. Problem Encountered and Troubleshooting
 
-## 8. Project Tools
+Describe one real issue you faced here, or delete this section if there was none. Include what you saw (for example "Request timed out"), how you found the cause, and how you fixed it.
 
-- Cisco Packet Tracer
-- Cisco 2960-24TT Switch
-- Two PCs
-- Ethernet cables
-- GitHub
+## 12. Next Steps
 
-## 9. Project Outcome
-
-Successfully created a basic LAN connecting two computers through a Cisco switch.
-
-Both computers were configured with IP addresses in the same subnet, and successful ping tests confirmed network connectivity.
-# -bank-branch-network-audit
-Audit and redesign of a flat office network for a small bank branch.
+- **Task 3:** list the risks of this flat design and what each costs the business.
+- **Task 4:** redesign with VLANs and a VLSM addressing plan.
+- **Task 5:** before and after comparison, test table and final handover.
